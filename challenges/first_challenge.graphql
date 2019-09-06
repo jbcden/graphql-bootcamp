@@ -1,0 +1,12 @@
+# Modify the query below to include the course field
+query {
+  hello
+  courseInstructor
+}
+
+# Solution
+query {
+  hello
+  courseInstructor
+  course
+}

@@ -1,0 +1,7 @@
+# create a query that fetches post id and title
+query {
+    posts {
+        id
+        title
+    }
+}
