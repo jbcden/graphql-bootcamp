@@ -1,40 +1,44 @@
 import { GraphQLServer } from 'graphql-yoga'
 
-// GraphQL's 5 Scalar types:
-//  String
-//  Boolean
-//  Int
-//  Float
-//  ID
-
 // Type definitions (schema)
 const typeDefs = `
     type Query {
+        me: User!
+        post: Post!
+    }
+
+    type Post {
+        id: ID!
         title: String!
-        price: Float!
-        releaseYear: Int
-        rating: Float
-        inStock: Boolean!
+        body: String!
+        published: Boolean!
+    }
+
+    type User {
+        id: ID!
+        name: String!
+        email: String!
+        age: Int
     }
 `
 
 // Resolvers
 const resolvers = {
     Query: {
-        title() {
-            return 'Sakaba'
+        me() {
+            return {
+                id: 'abc123',
+                name: 'Mike',
+                email: 'mike@example.com'
+            }
         },
-        price() {
-            return 100.20
-        },
-        releaseYear() {
-            return 2020
-        },
-        rating() {
-            return null
-        },
-        inStock() {
-            return false
+        post() {
+            return {
+                id: 'post1',
+                title: 'A lengthy discourse on databases',
+                body: 'Some info',
+                published: false
+            }
         }
     }
 }
