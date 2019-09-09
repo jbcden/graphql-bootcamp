@@ -1,8 +1,44 @@
 import { GraphQLServer } from 'graphql-yoga'
 
+// Demo user data
+const users = [{
+    id: '1',
+    name: 'Jacob',
+    email: 'jacob@example.com',
+    age: 27
+}, {
+    id: '2',
+    name: 'Sarah',
+    email: 'sarah@example.com'
+}, {
+    id: '3',
+    name: 'Mike',
+    email: 'mike@example.com'
+}]
+
+// Demo post data
+const posts = [{
+    id: '1',
+    title: 'My first post!',
+    body: 'I do not have much to say',
+    published: true
+}, {
+    id: '2',
+    title: 'What is a post?',
+    body: 'Not this',
+    published: false
+}, {
+    id: '3',
+    title: 'SQL all the things!',
+    body: 'select * from things;',
+    published: true
+}]
+
 // Type definitions (schema)
 const typeDefs = `
     type Query {
+        posts(query: String): [Post!]!
+        users(query: String): [User!]!
         me: User!
         post: Post!
     }
@@ -25,6 +61,26 @@ const typeDefs = `
 // Resolvers
 const resolvers = {
     Query: {
+        posts(parent, { query }, ctx, info) {
+            if (!query) {
+                return posts
+            }
+
+            return posts.filter((post) => {
+                let queryString = query.toLowerCase()
+                return post.title.toLowerCase().includes(queryString) ||
+                    post.body.toLowerCase().includes(queryString)
+            })
+        },
+        users(parent, { query }, ctx, info) {
+            if (!query) {
+                return users
+            }
+
+            return users.filter((user) => {
+                return user.name.toLowerCase().includes(query.toLowerCase())
+            })
+        },
         me() {
             return {
                 id: 'abc123',
