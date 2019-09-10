@@ -21,17 +21,20 @@ const posts = [{
     id: '1',
     title: 'My first post!',
     body: 'I do not have much to say',
-    published: true
+    published: true,
+    author: '1'
 }, {
     id: '2',
     title: 'What is a post?',
     body: 'Not this',
-    published: false
+    published: false,
+    author: '1'
 }, {
     id: '3',
     title: 'SQL all the things!',
     body: 'select * from things;',
-    published: true
+    published: true,
+    author: '2'
 }]
 
 // Type definitions (schema)
@@ -48,6 +51,7 @@ const typeDefs = `
         title: String!
         body: String!
         published: Boolean!
+        author: User!
     }
 
     type User {
@@ -95,6 +99,13 @@ const resolvers = {
                 body: 'Some info',
                 published: false
             }
+        }
+    },
+    Post: {
+        author(parent, args, ctx, info) {
+            return users.find((user) => {
+                return user.id == parent.author
+            })
         }
     }
 }
