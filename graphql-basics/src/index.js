@@ -37,6 +37,24 @@ const posts = [{
     author: '2'
 }]
 
+// Dummy comment data
+const comments = [{
+    id: '1',
+    text: 'This is a nice comment!'
+},
+{
+    id: '2',
+    text: 'This sucks!'
+},
+{
+    id: '3',
+    text: "Can't we all be friends?!?"
+},
+{
+    id: '4',
+    text: 'I just want to sleep'
+}]
+
 // Type definitions (schema)
 const typeDefs = `
     type Query {
@@ -44,6 +62,7 @@ const typeDefs = `
         users(query: String): [User!]!
         me: User!
         post: Post!
+        comments: [Comment!]!
     }
 
     type Post {
@@ -60,6 +79,11 @@ const typeDefs = `
         email: String!
         age: Int
         posts: [Post!]!
+    }
+
+    type Comment {
+        id: ID!
+        text: String!
     }
 `
 
@@ -100,6 +124,9 @@ const resolvers = {
                 body: 'Some info',
                 published: false
             }
+        },
+        comments(parents, args, ctx, info) {
+            return comments
         }
     },
     Post: {
