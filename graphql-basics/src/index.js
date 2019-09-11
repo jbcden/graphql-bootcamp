@@ -40,19 +40,23 @@ const posts = [{
 // Dummy comment data
 const comments = [{
     id: '1',
-    text: 'This is a nice comment!'
+    text: 'This is a nice comment!',
+    author: '1'
 },
 {
     id: '2',
-    text: 'This sucks!'
+    text: 'This sucks!',
+    author: '2'
 },
 {
     id: '3',
-    text: "Can't we all be friends?!?"
+    text: "Can't we all be friends?!?",
+    author: '3'
 },
 {
     id: '4',
-    text: 'I just want to sleep'
+    text: 'I just want to sleep',
+    author: '3'
 }]
 
 // Type definitions (schema)
@@ -79,11 +83,13 @@ const typeDefs = `
         email: String!
         age: Int
         posts: [Post!]!
+        comments: [Comment!]!
     }
 
     type Comment {
         id: ID!
         text: String!
+        author: User!
     }
 `
 
@@ -140,6 +146,18 @@ const resolvers = {
         posts(parent, args, ctx, info) {
             return posts.filter((post) => {
                 return post.author == parent.id
+            })
+        },
+        comments(parent, args, ctx, info) {
+            return comments.filter((comment) => {
+                return comment.author == parent.id
+            })
+        }
+    },
+    Comment: {
+        author(parent, args, ctx, info) {
+            return users.find((user) => {
+                return user.id == parent.author
             })
         }
     }
