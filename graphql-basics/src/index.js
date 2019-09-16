@@ -149,7 +149,8 @@ const resolvers = {
         }
     },
     Mutation: {
-      createUser(parent, { name, email, age }, ctx, info) {
+      createUser(parent, args, ctx, info) {
+        const { name, email, age } = args
         const emailTaken = users.some((user) => {
           return user.email == email
         })
@@ -160,16 +161,15 @@ const resolvers = {
 
         const user = {
           id: uuidv4(),
-          name: name,
-          email: email,
-          age: age
+          ...args
         }
 
         users.push(user)
 
         return user
       },
-      createPost(parent, { title, body, published, author}, ctx, info) {
+      createPost(parent, args, ctx, info) {
+        const { title, body, published, author} = args
         const userExists = users.some((user) => user.id == author)
 
         if (!userExists) {
@@ -178,16 +178,14 @@ const resolvers = {
 
         const post = {
           id: uuidv4(),
-          title: title,
-          body: body,
-          published: published,
-          author: author
+          ...args
         }
         posts.push(post)
 
         return post
       },
-      createComment(parent, { text, author, post }, ctx, info) {
+      createComment(parent, args, ctx, info) {
+        const { text, author, post } = args
         const userExists = users.some((user) => user.id == author)
 
         if (!userExists) {
@@ -200,11 +198,10 @@ const resolvers = {
           throw new Error('Post is not valid')
         }
 
+        console.log(args)
         const comment = {
           id: uuidv4(),
-          text: text,
-          author: author,
-          post: post
+          ...args
         }
 
         comments.push(comment)
