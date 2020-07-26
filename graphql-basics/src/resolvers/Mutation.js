@@ -197,12 +197,15 @@ const Mutation = {
 
     db.comments.push(comment)
     pubsub.publish(`comment:${data.post}`, {
-      comment
+      comment: {
+        mutation: 'CREATED',
+        data: comment
+      }
     })
 
     return comment
   },
-  deleteComment(parent, { id }, { db }, info) {
+  deleteComment(parent, { id }, { db, pubsub }, info) {
     const commentIndex = db.comments.findIndex((comment) => comment.id == id)
 
     if (commentIndex === -1) {
@@ -210,10 +213,17 @@ const Mutation = {
     }
 
     const [deletedComment] = db.comments.splice(commentIndex, 1)
+    
+    pubsub.publish(`comment:${deletedComment.post}`, {
+      comment: {
+        mutation: 'DELETED',
+        data: deletedComment
+      }
+    })
 
     return deletedComment
   },
-  updateComment(parent, { id, data }, { db }, info) {
+  updateComment(parent, { id, data }, { db, pubsub }, info) {
     const comment = db.comments.find((comment) => comment.id === id)
 
     if (!comment) {
@@ -223,6 +233,13 @@ const Mutation = {
     if (typeof data.text === 'string') {
       comment.text = data.text
     }
+
+    pubsub.publish(`comment:${comment.post}`, {
+      comment: {
+        mutation: 'UPDATED',
+        data: comment
+      }
+    })
 
     return comment
   }
