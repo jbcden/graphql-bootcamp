@@ -1,0 +1,4 @@
+```shell
+docker-compose up -d # run prisma
+prisma deploy # deploy data model to prisma instance
+```
